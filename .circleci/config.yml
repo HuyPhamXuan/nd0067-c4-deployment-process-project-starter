@@ -59,7 +59,7 @@ jobs:
           # Install, build, deploy in both apps
           command: |
             aws s3 sync ./udagram/udagram-frontend/www s3://$BUCKET_NAME
-            aws s3 cp udagram/udagram-api/Archive.zip s3://$BUCKET_NAME/Archive.zip
+            aws s3 cp udagram/udagram-api/www/Archive.zip s3://$BUCKET_NAME/Archive.zip
             LABEL=$(date +%Y%m%d%H%M%S)
             aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label $LABEL --source-bundle S3Bucket="$BUCKET_NAME",S3Key="Archive.zip" --region $AWS_REGION
             aws elasticbeanstalk update-environment --application-name $EB_APP_NAME --version-label $LABEL --environment-name $EB_ENV_NAME --region $AWS_REGION
