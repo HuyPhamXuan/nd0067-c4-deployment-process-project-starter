@@ -52,7 +52,6 @@ jobs:
     steps:
       - node/install:
           node-version: '14.15' 
-      - eb/setup
       - aws-cli/setup
       - checkout
       - run:
@@ -60,9 +59,10 @@ jobs:
           # Install, build, deploy in both apps
           command: |
             aws s3 sync ./udagram/udagram-frontend s3://$BUCKET_NAME
-            eb init $EB_APP_NAME --platform "64bit Amazon Linux 2023 v6.0.3 running Node.js 18"
-            eb create $EB_ENV_NAME
-            eb deploy $EB_ENV_NAME
+            aws s3 cp udagram/udagram-api/ Archive.zip s3://$BUCKET_NAME/Archive.zip
+            LABEL=$(date +%Y%m%d%H%M%S)
+            aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label $LABEL --source-bundle S3Bucket="$BUCKET_NAME",S3Key="Archive.zip"
+            aws elasticbeanstalk update-environment --application-name $EB_APP_NAME --version-label $LABEL --environment-name $EB_ENV_NAME
 workflows:
   udagram:
     jobs:
