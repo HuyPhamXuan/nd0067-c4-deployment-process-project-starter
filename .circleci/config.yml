@@ -43,7 +43,6 @@ jobs:
       - run:
           name: API Build
           command: |
-            eb init $EB_APP_NAME --platform "64bit Amazon Linux 2023 v6.0.3 running Node.js 18"
             npm run api:build
   # deploy step will run only after manual approval
   deploy:
@@ -60,7 +59,7 @@ jobs:
           name: Deploy App
           # Install, build, deploy in both apps
           command: |
-            echo "# TODO: Install, build, deploy in both apps"
+            eb init $EB_APP_NAME --platform "64bit Amazon Linux 2023 v6.0.3 running Node.js 18"
             eb deploy $EB_ENV_NAME
             aws s3 sync ./udagram/udagram-frontend s3://$BUCKET_NAME
             
